@@ -1,103 +1,60 @@
+// lib/screens/login_screen.dart
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailCtl = TextEditingController();
+  final _passCtl = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailCtl.dispose();
+    _passCtl.dispose();
+    super.dispose();
+  }
+
+  void _onSignIn() {
+    if (_formKey.currentState!.validate()) {
+      // Jika valid: pindah ke dashboard (ganti pushReplacement agar tidak kembali ke login)
+      Navigator.pushReplacementNamed(context, '/dashboard');
+    } else {
+      ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('Lengkapi data terlebih dahulu')));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+      appBar: AppBar(title: const Text('Sign In')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Logo + Branding
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset("assets/logo-mola.png", height: 60),
-                  const SizedBox(width: 8),
-                  const Text(
-                    "Justduit",
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 32),
-
-              const Text(
-                "Hi, Welcome Back to Justduit",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-              ),
-              const SizedBox(height: 20),
-
-              // Email field
-              TextField(
-                decoration: InputDecoration(
-                  labelText: "Email Address *",
-                  hintText: "Enter your email",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Password field
-              TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: "Password *",
-                  hintText: "Enter your password",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
+              TextFormField(
+                controller: _emailCtl,
+                decoration: const InputDecoration(labelText: 'Email'),
+                validator: (v) => v == null || v.isEmpty ? 'Masukkan email' : null,
               ),
               const SizedBox(height: 12),
-
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {},
-                  child: const Text("Forgot Password"),
-                ),
+              TextFormField(
+                controller: _passCtl,
+                decoration: const InputDecoration(labelText: 'Password'),
+                obscureText: true,
+                validator: (v) => v == null || v.isEmpty ? 'Masukkan password' : null,
               ),
-
-              const SizedBox(height: 8),
-
-              // Sign In Button
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  onPressed: () {},
-                  child: const Text(
-                    "Sign In Now",
-                    style: TextStyle(fontSize: 16, color: Colors.white),
-                  ),
-                ),
-              ),
-
               const SizedBox(height: 20),
-              Center(
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/signup');
-                  },
-                  child: const Text(
-                    "Don’t have an account? Sign Up",
-                    style: TextStyle(color: Colors.black54),
-                  ),
-                ),
+              ElevatedButton(
+                onPressed: _onSignIn,
+                child: const Text('Sign In Now'),
               ),
             ],
           ),

@@ -19,13 +19,6 @@ class SignupScreen extends StatelessWidget {
                 children: [
                   Image.asset("assets/logo-mola.png", height: 60),
                   const SizedBox(width: 8),
-                  const Text(
-                    "Justduit",
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )
                 ],
               ),
               const SizedBox(height: 32),
